@@ -25,6 +25,13 @@ if (LINE !== LINE.trim() || LINE.includes("\n") || LINE.includes("\r")) {
 if (/[\u0000-\u001f\u007f]/.test(LINE)) {
   throw new Error("entry must not contain control characters");
 }
+// Printable-ASCII check: a one-sentence entry for this competition is
+// conventionally ASCII, and a non-ASCII character that slips past the
+// control-char guard above could confuse parsers, so reject anything
+// outside 0x20-0x7E.
+if (/[^\x20-\x7e]/.test(LINE)) {
+  throw new Error("entry must contain only printable ASCII characters");
+}
 // One sentence: exactly one period, at the very end, and no other
 // sentence terminators. (The entry has no decimals, so any '.' inside
 // would be a second sentence.)
